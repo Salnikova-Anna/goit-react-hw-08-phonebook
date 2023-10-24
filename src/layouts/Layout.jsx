@@ -1,5 +1,5 @@
 import Header from 'components/Header/Header';
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { refreshThunk } from 'redux/auth/operations';
