@@ -27,11 +27,7 @@ export const signIn = async body => {
 };
 
 export const refresh = async () => {
-  const token = JSON.parse(localStorage.getItem('persist:auth'));
-
-  setToken(JSON.parse(token?.token));
   const { data } = await instance('/users/current');
-  setToken(data.token);
   return data;
 };
 

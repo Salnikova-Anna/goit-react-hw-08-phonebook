@@ -1,29 +1,49 @@
-// import PrivateRoute from 'guards/PrivateRoute/PrivateRoute';
-// import PrivateRoute from 'guards/PrivateRoute/PrivateRoute';
 import Layout from 'layouts/Layout';
-import Contacts from 'pages/Contacts/Contacts';
-import Homepage from 'pages/Homepage/Homepage';
-import Login from 'pages/Login/Login';
-import Registration from 'pages/Registration/Registration';
-// import { Suspense, lazy } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { refreshThunk } from 'redux/auth/operations';
+import { refreshSelector } from 'redux/auth/selector';
 
-// const HomePage = lazy(() => import('../pages/Homepage/Homepage'));
-// const Contacts = lazy(() => import('../pages/Contacts/Contacts'));
-// const Login = lazy(() => import('../pages/Login/Login'));
-// const Registration = lazy(() => import('../pages/Registration/Registration'));
-// const PrivateRoute = lazy(() => import('../guards/PrivateRoute/PrivateRoute'));
+const HomePage = lazy(() => import('../pages/Homepage/Homepage'));
+const Contacts = lazy(() => import('../pages/Contacts/Contacts'));
+const Login = lazy(() => import('../pages/Login/Login'));
+const Registration = lazy(() => import('../pages/Registration/Registration'));
 
 export const App = () => {
-  return (
+  const dispatch = useDispatch();
+  const isRefreshing = useSelector(refreshSelector);
+
+  useEffect(() => {
+    dispatch(refreshThunk());
+  }, [dispatch]);
+
+  return isRefreshing ? (
+    <b>Refreshing user...</b>
+  ) : (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Homepage />} />
+        <Route index element={<HomePage />} />
         <Route path="contacts" element={<Contacts />} />
       </Route>
 
-      <Route path="login" element={<Login />} />
-      <Route path="registration" element={<Registration />} />
+      <Route
+        path="login"
+        element={
+          <Suspense>
+            <Login />
+          </Suspense>
+        }
+      />
+      <Route
+        path="registration"
+        element={
+          <Suspense>
+            <Registration />
+          </Suspense>
+        }
+      />
     </Routes>
   );
 };

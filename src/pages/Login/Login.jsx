@@ -15,7 +15,6 @@ const Login = () => {
 
   useEffect(() => {
     isAuth && navigate('/contacts');
-    console.log(isAuth);
   }, [isAuth, navigate]);
 
   return <LoginForm login={login} />;

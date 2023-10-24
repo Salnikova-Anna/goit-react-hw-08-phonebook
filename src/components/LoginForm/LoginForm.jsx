@@ -15,6 +15,7 @@ const LoginForm = ({ login }) => {
       email: email.value,
       password: password.value,
     });
+    e.currentTarget.reset();
   };
 
   return (
