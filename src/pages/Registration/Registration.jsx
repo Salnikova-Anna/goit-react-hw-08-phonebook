@@ -1,15 +1,22 @@
-import { signUp } from 'api/auth';
 import RegistrationForm from 'components/RegistrationForm/RegistrationForm';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { registrationThunk } from 'redux/auth/operations';
+import { authSelector } from 'redux/auth/selector';
 
 const Registration = () => {
-  const registration = async body => {
-    try {
-      const data = await signUp(body);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuth = useSelector(authSelector);
+
+  const registration = body => {
+    dispatch(registrationThunk(body));
   };
+
+  useEffect(() => {
+    isAuth && navigate('/contacts');
+  }, [isAuth, navigate]);
 
   return <RegistrationForm registration={registration} />;
 };
