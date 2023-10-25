@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
   RegFormButton,
   RegFormInput,
@@ -6,22 +6,27 @@ import {
   RegFormStyled,
   RegFormWrap,
 } from './RegistrationForm.styled';
+import { registrationThunk } from 'redux/auth/operations';
 
-const RegistrationForm = ({ registration }) => {
-  const handleSubmit = evt => {
-    evt.preventDefault();
-    const { name, email, password } = evt.target.elements;
-    registration({
-      name: name.value,
-      email: email.value,
-      password: password.value,
-    });
-    evt.currentTarget.reset();
+const RegistrationForm = () => {
+  const dispatch = useDispatch();
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    dispatch(
+      registrationThunk({
+        name: form.elements.name.value,
+        email: form.elements.email.value,
+        password: form.elements.password.value,
+      })
+    );
+
+    form.reset();
   };
 
   return (
     <RegFormWrap>
-      <Link to="/">Back home</Link>
       <RegFormStyled onSubmit={handleSubmit}>
         <RegFormLabel>
           Name

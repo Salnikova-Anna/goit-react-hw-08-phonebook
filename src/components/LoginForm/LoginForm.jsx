@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
   LoginWrap,
   LoginFormStyled,
@@ -6,21 +6,25 @@ import {
   LoginFormButton,
   LoginFormInput,
 } from './LoginForm.styled';
+import { loginThunk } from 'redux/auth/operations';
 
-const LoginForm = ({ login }) => {
+const LoginForm = () => {
+  const dispatch = useDispatch();
+
   const handleSubmit = e => {
     e.preventDefault();
-    const { email, password } = e.target.elements;
-    login({
-      email: email.value,
-      password: password.value,
-    });
-    e.currentTarget.reset();
+    const form = e.currentTarget;
+    dispatch(
+      loginThunk({
+        email: form.elements.email.value,
+        password: form.elements.password.value,
+      })
+    );
+    form.reset();
   };
 
   return (
     <LoginWrap>
-      <Link to="/">Back home</Link>
       <LoginFormStyled autoComplete="off" onSubmit={handleSubmit}>
         <LoginFormLabel>
           Email

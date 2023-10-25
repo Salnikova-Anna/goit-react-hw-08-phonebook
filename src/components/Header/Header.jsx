@@ -1,6 +1,4 @@
-import { deleteToken } from 'api/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { loggedInSelector } from 'redux/auth/selector';
 import {
   HeaderBtnLogOut,
@@ -13,12 +11,11 @@ import { logOutThunk } from 'redux/auth/operations';
 const Header = () => {
   const isLoggedIn = useSelector(loggedInSelector);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleLotOutBtn = () => {
     dispatch(logOutThunk());
-    deleteToken();
-    navigate('/');
+    // navigate('/');
   };
 
   return (

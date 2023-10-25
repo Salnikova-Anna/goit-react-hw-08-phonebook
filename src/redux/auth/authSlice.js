@@ -7,8 +7,8 @@ import {
 } from './operations';
 
 const initialState = {
-  token: '',
-  profile: null,
+  token: null,
+  profile: { name: null, email: null },
   isRefreshing: false,
   isLoggedIn: false,
 };
@@ -20,9 +20,16 @@ const handleAuthFulfilled = (state, { payload }) => {
 };
 
 const handleLogOutFulfilled = state => {
-  state.profile = null;
-  state.token = '';
+  state.profile = { name: null, email: null };
+  state.token = null;
   state.isLoggedIn = false;
+};
+
+const refreshFulfilled = (state, { payload }) => {
+  state.token = payload.token;
+  state.profile = payload.user;
+  state.isLoggedIn = true;
+  state.isRefreshing = false;
 };
 
 const authSlice = createSlice({
@@ -34,12 +41,7 @@ const authSlice = createSlice({
       .addCase(refreshThunk.pending, ({ isRefreshing }) => {
         isRefreshing = true;
       })
-      .addCase(refreshThunk.fulfilled, (state, { payload }) => {
-        state.token = payload.token;
-        state.profile = payload.user;
-        state.isLoggedIn = true;
-        state.isRefreshing = false;
-      })
+      .addCase(refreshThunk.fulfilled, refreshFulfilled)
       .addCase(refreshThunk.rejected, ({ isRefreshing }) => {
         isRefreshing = false;
       })

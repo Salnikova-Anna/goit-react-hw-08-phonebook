@@ -27,7 +27,7 @@ export const signIn = async body => {
 };
 
 export const refresh = async () => {
-  const { data } = await instance('/users/current');
+  const { data } = await instance.get('/users/current');
   return data;
 };
 
