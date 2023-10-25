@@ -14,8 +14,8 @@ const initialState = {
 };
 
 const handleAuthFulfilled = (state, { payload }) => {
-  state.token = payload.token;
   state.profile = payload.user;
+  state.token = payload.token;
   state.isLoggedIn = true;
 };
 
@@ -26,10 +26,17 @@ const handleLogOutFulfilled = state => {
 };
 
 const refreshFulfilled = (state, { payload }) => {
-  state.token = payload.token;
   state.profile = payload.user;
   state.isLoggedIn = true;
   state.isRefreshing = false;
+};
+
+const refreshPending = ({ isRefreshing }) => {
+  isRefreshing = true;
+};
+
+const refreshRejected = ({ isRefreshing }) => {
+  isRefreshing = false;
 };
 
 const authSlice = createSlice({
@@ -38,13 +45,9 @@ const authSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(registrationThunk.fulfilled, handleAuthFulfilled)
-      .addCase(refreshThunk.pending, ({ isRefreshing }) => {
-        isRefreshing = true;
-      })
+      .addCase(refreshThunk.pending, refreshPending)
       .addCase(refreshThunk.fulfilled, refreshFulfilled)
-      .addCase(refreshThunk.rejected, ({ isRefreshing }) => {
-        isRefreshing = false;
-      })
+      .addCase(refreshThunk.rejected, refreshRejected)
       .addCase(loginThunk.fulfilled, handleAuthFulfilled)
       .addCase(logOutThunk.fulfilled, handleLogOutFulfilled);
   },
